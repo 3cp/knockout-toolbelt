@@ -1,0 +1,27 @@
+{
+  "name": "knockout-toolbelt",
+  "version": "0.0.0",
+  "authors": [
+    "Chunpeng Huo <huochunpeng@gmail.com>"
+  ],
+  "description": "A collection of knockout extenders and binding handlers",
+  "main": "dist/knockout-toolbelt.min.js",
+  "keywords": [
+    "Knockout"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/huochunpeng/knockout-toolbelt",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "~3.1.0",
+    "jquery": "~1.11.1",
+    "underscore": "~1.6.0",
+    "underscore.string": "~2.3.3"
+  }
+}
