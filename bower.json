@@ -15,8 +15,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
+    "spec"
   ],
   "dependencies": {
     "knockout": "~3.1.0",
