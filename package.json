@@ -28,11 +28,13 @@
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
+    "docco": "~0.6.3",
     "grunt": "~0.4.5",
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-watch": "~0.6.1",
+    "grunt-docco": "~0.3.3",
     "grunt-jasmine-node": "~0.2.1"
   }
 }

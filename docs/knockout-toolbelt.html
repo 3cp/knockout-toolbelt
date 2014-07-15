@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>knockout-toolbelt.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>knockout-toolbelt.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Knockout toolbelt - version 0.0.0</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(global, undefined)</span> </span>{
+<span class="hljs-pi">  'use strict'</span>;
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">attachToKo</span><span class="hljs-params">(ko, $, _, _s)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>factory method for building extender</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildExtender</span><span class="hljs-params">(valueFilter)</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(target, opts)</span> </span>{
+        <span class="hljs-keyword">var</span> result = ko.computed({
+          read: target,
+          write: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span> </span>{
+            <span class="hljs-keyword">var</span> current = target();
+            <span class="hljs-keyword">var</span> valueToWrite = valueFilter(newValue, opts);
+
+            <span class="hljs-keyword">if</span> (valueToWrite !== current) {
+              target(valueToWrite);
+            } <span class="hljs-keyword">else</span> {
+              <span class="hljs-keyword">if</span> (newValue !== current) {
+                target.notifySubscribers(valueToWrite);
+              }
+            }
+          }
+        });
+
+        result(target());
+        <span class="hljs-keyword">return</span> result;
+      };
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h1 id="extenders">Extenders</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="numeric">numeric</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>copied from <a href="http://knockoutjs.com/documentation/extenders.html">http://knockoutjs.com/documentation/extenders.html</a>
+(with fix of initial undefined value <code>isNaN(+newValue)</code>)</p>
+<ul>
+<li>an integer <code>ko.observable().extend({numeric: 0})</code></li>
+<li>a float with 2 digital after decimal point (1.23) <code>ko.observable().extend({numeric: 2})</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    ko.extenders.numeric = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue, precision)</span> </span>{
+      <span class="hljs-keyword">var</span> roundingMultiplier = <span class="hljs-built_in">Math</span>.pow(<span class="hljs-number">10</span>, precision);
+      <span class="hljs-keyword">var</span> newValueAsNum = <span class="hljs-built_in">isNaN</span>(+newValue) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">parseFloat</span>(+newValue);
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.round(newValueAsNum * roundingMultiplier) / roundingMultiplier;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2 id="numericrange">numericRange</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>support max and min</p>
+<ul>
+<li>a float &gt;= 2 <code>ko.observable().extend({numericRange: {min: 2}})</code></li>
+<li>a float &lt;= 2 <code>ko.observable().extend({numericRange: {max: 2}})</code></li>
+<li>a float between 2 and 5 inclusive <code>ko.observable().extend({numericRange: {min: 2, max: 5}})</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    ko.extenders.numericRange = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue, opts)</span> </span>{
+      <span class="hljs-keyword">var</span> min = opts.min || -<span class="hljs-literal">Infinity</span>;
+      <span class="hljs-keyword">var</span> max = opts.max || <span class="hljs-literal">Infinity</span>;
+
+      <span class="hljs-keyword">if</span> (min &gt; max) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-string">"Error: min ("</span> + min + <span class="hljs-string">") is greater than max ("</span> + max + <span class="hljs-string">")!"</span>;
+      }
+
+      <span class="hljs-keyword">var</span> valueToWrite = <span class="hljs-built_in">parseFloat</span>(+newValue);
+      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(valueToWrite) || min &gt; valueToWrite) {
+        valueToWrite = min;
+      } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (max &lt; valueToWrite) {
+        valueToWrite = max;
+      }
+
+      <span class="hljs-keyword">return</span> valueToWrite;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="trim">trim</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>trim string</p>
+<ul>
+<li><code>ko.observable().extend({trim: true})</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    ko.extenders.trim = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span> </span>{
+      <span class="hljs-keyword">return</span> _s.trim(newValue);
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h2 id="uppercase">uppercase</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>uppercase string</p>
+<ul>
+<li><code>ko.observable().extend({uppercase: true})</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    ko.extenders.uppercase = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span> </span>{
+      <span class="hljs-keyword">return</span> newValue.toString().toUpperCase();
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="lowercase">lowercase</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>lowercase string</p>
+<ul>
+<li><code>ko.observable().extend({lowercase: true})</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    ko.extenders.lowercase = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span> </span>{
+      <span class="hljs-keyword">return</span> newValue.toString().toLowerCase();
+    });
+
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>support various module systems</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">prepareExports</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> !== <span class="hljs-string">'undefined'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span>.exports !== <span class="hljs-string">'undefined'</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Node.js</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">var</span> ko = <span class="hljs-built_in">require</span>(<span class="hljs-string">'knockout'</span>);
+      <span class="hljs-keyword">var</span> $ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'jquery'</span>);
+      <span class="hljs-keyword">var</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'underscore'</span>);
+      <span class="hljs-keyword">var</span> _s = <span class="hljs-built_in">require</span>(<span class="hljs-string">'underscore.string'</span>);
+      attachToKo(ko, $, _, _s);
+      <span class="hljs-built_in">module</span>.exports = ko;
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>AMD (requireJS)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      define([<span class="hljs-string">'knockout'</span>, <span class="hljs-string">'jquery'</span>, <span class="hljs-string">'underscore'</span>, <span class="hljs-string">'underscore.string'</span>], attachToKo);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (global.ko &amp;&amp; global.$ &amp;&amp; global._ &amp;&amp; global._.str) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Non-module case - attach to the global instance</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      attachToKo(global.ko, global.$, global._, global._.str);
+    }
+  }
+
+  prepareExports();
+
+})(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
