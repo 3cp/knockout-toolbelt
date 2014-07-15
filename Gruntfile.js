@@ -52,12 +52,13 @@ module.exports = function(grunt) {
     },
     jasmine_node: {
       options: {
-        specNameMatcher: "spec",
+        specNameMatcher: "\\.spec",
         projectRoot: ".",
         requirejs: false,
         useHelpers: true,
         forceExit: true
-      }
+      },
+      all: ['spec/']
     },
     watch: {
       scripts: {

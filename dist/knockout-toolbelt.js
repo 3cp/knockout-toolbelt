@@ -77,7 +77,7 @@
     });
 
     // uppercase
-    // ----
+    // ---------
     // uppercase string
     //  - `ko.observable().extend({uppercase: true})`
     ko.extenders.uppercase = buildExtender(function(newValue) {
@@ -85,12 +85,63 @@
     });
 
     // lowercase
-    // ----
+    // ---------
     // lowercase string
     //  - `ko.observable().extend({lowercase: true})`
     ko.extenders.lowercase = buildExtender(function(newValue) {
       return newValue.toString().toLowerCase();
     });
+
+    // bindingHandlers
+    // ===============
+
+    // jqueryui datepicker
+    // -------------------
+    // Only when jqueryui datepicker is available [http://api.jqueryui.com/datepicker/](http://api.jqueryui.com/datepicker/)
+    if ($.fn && $.fn.datepicker) {
+      // - `<input date-bind="datepicker: aDate, datepickerOptions: { dateFormat: 'yy-mm-dd' }">`
+      ko.bindingHandlers.datepicker = {
+        init: function (element, valueAccessor, allBindingsAccessor) {
+          // pass any valid datepicker options to `datepickerOptions`.
+          var options = allBindingsAccessor().datepickerOptions || {};
+          $(element).datepicker(options);
+
+          $(element).on("change", function () {
+            var observable = valueAccessor();
+            observable($(element).datepicker("getDate"));
+          });
+
+          ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+            $(element).datepicker("destroy");
+          });
+        },
+        update: function(element, valueAccessor) {
+          var v = ko.unwrap(valueAccessor());
+          if (_.isDate(v)) {
+            $(element).datepicker('setDate', v);
+          } else {
+            $(element).datepicker('setDate', null);
+          }
+        }
+      };
+    }
+
+    // jquery fileupload
+    // -----------------
+    // Only when jquery fileupload is available [https://github.com/blueimp/jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload)
+    if ($.fn && $.fn.fileupload) {
+      ko.bindingHandlers.fileupload = {
+        init: function (element, valueAccessor) {
+          var options = valueAccessor() || {};
+          $(element).fileupload(options);
+
+          ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
+              $(element).fileupload("destroy");
+          });
+        }
+      };
+    }
+
 
   }
 

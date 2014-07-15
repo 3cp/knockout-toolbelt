@@ -1,28 +1,5 @@
-/*
-------------------------------------------------------------------------------
-Copyright (c) Microsoft Corporation
-All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-THIS CODE IS PROVIDED *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABLITY OR NON-INFRINGEMENT.
-See the Apache Version 2.0 License for specific language governing permissions and limitations under the License.
-------------------------------------------------------------------------------
-*/
-
 (function() {
-  var ko = this.ko || require('../src/knockout-toolbelt.js'),
-    makeSampleData = function() {
-      var sampleData = {
-        everest: { height: ko.observable(8848) },
-        aconcagua: { height: ko.observable(6961) },
-        mckinley: { height: ko.observable(6194) },
-        kilimanjaro: { height: ko.observable(5895) },
-        elbrus: { height: ko.observable(5642) },
-        vinson: { height: ko.observable(4892) },
-        puncakjaya: { height: ko.observable(4884) },
-      };
-      sampleData.all = [sampleData.everest, sampleData.aconcagua, sampleData.mckinley, sampleData.kilimanjaro, sampleData.elbrus, sampleData.vinson, sampleData.puncakjaya];
-      return sampleData;
-    };
+  var ko = this.ko || require('../src/knockout-toolbelt.js');
 
   describe("Extender 'numeric'", function () {
 
@@ -185,4 +162,4 @@ See the Apache Version 2.0 License for specific language governing permissions a
   });
 
 
-})();
+})(this);

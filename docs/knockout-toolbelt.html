@@ -281,9 +281,7 @@
             
             <div class="content"><div class='highlight'><pre>    ko.extenders.lowercase = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span> </span>{
       <span class="hljs-keyword">return</span> newValue.toString().toLowerCase();
-    });
-
-  }</pre></div></div>
+    });</pre></div></div>
             
         </li>
         
@@ -293,6 +291,155 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <h1 id="bindinghandlers">bindingHandlers</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <h2 id="jqueryui-datepicker">jqueryui datepicker</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Only when jqueryui datepicker is available <a href="http://api.jqueryui.com/datepicker/">http://api.jqueryui.com/datepicker/</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($.fn &amp;&amp; $.fn.datepicker) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <ul>
+<li><code>&lt;input date-bind=&quot;datepicker: aDate, datepickerOptions: { dateFormat: &#39;yy-mm-dd&#39; }&quot;&gt;</code></li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      ko.bindingHandlers.datepicker = {
+        init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, valueAccessor, allBindingsAccessor)</span> </span>{</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>pass any valid datepicker options to <code>datepickerOptions</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> options = allBindingsAccessor().datepickerOptions || {};
+          $(element).datepicker(options);
+
+          $(element).on(<span class="hljs-string">"change"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            <span class="hljs-keyword">var</span> observable = valueAccessor();
+            observable($(element).datepicker(<span class="hljs-string">"getDate"</span>));
+          });
+
+          ko.utils.domNodeDisposal.addDisposeCallback(element, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+            $(element).datepicker(<span class="hljs-string">"destroy"</span>);
+          });
+        },
+        update: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(element, valueAccessor)</span> </span>{
+          <span class="hljs-keyword">var</span> v = ko.unwrap(valueAccessor());
+          <span class="hljs-keyword">if</span> (_.isDate(v)) {
+            $(element).datepicker(<span class="hljs-string">'setDate'</span>, v);
+          } <span class="hljs-keyword">else</span> {
+            $(element).datepicker(<span class="hljs-string">'setDate'</span>, <span class="hljs-literal">null</span>);
+          }
+        }
+      };
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="jquery-fileupload">jquery fileupload</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Only when jquery fileupload is available <a href="https://github.com/blueimp/jQuery-File-Upload">https://github.com/blueimp/jQuery-File-Upload</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($.fn &amp;&amp; $.fn.fileupload) {
+      ko.bindingHandlers.fileupload = {
+        init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, valueAccessor)</span> </span>{
+          <span class="hljs-keyword">var</span> options = valueAccessor() || {};
+          $(element).fileupload(options);
+
+          ko.utils.domNodeDisposal.addDisposeCallback(element, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+              $(element).fileupload(<span class="hljs-string">"destroy"</span>);
+          });
+        }
+      };
+    }
+
+
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>support various module systems</p>
 
@@ -304,11 +451,11 @@
         </li>
         
         
-        <li id="section-16">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Node.js</p>
 
@@ -325,11 +472,11 @@
         </li>
         
         
-        <li id="section-17">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>AMD (requireJS)</p>
 
@@ -341,11 +488,11 @@
         </li>
         
         
-        <li id="section-18">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Non-module case - attach to the global instance</p>
 

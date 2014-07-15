@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>Knockout-Toolbelt - specs</title>
-
+    <link rel="shortcut icon" type="image/png" href="../node_modules/jasmine-reporters/lib/jasmine-2.0.0/jasmine_favicon.png">
     <link rel="stylesheet" type="text/css" href="../node_modules/jasmine-reporters/lib/jasmine-2.0.0/jasmine.css" />
     <script type="text/javascript" src="../node_modules/jasmine-reporters/lib/jasmine-2.0.0/jasmine.js"></script>
     <script type="text/javascript" src="../node_modules/jasmine-reporters/lib/jasmine-2.0.0/jasmine-html.js"></script>
@@ -11,6 +11,7 @@
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="../node_modules/underscore/underscore-min.js"></script>
     <script type="text/javascript" src="../node_modules/underscore.string/dist/underscore.string.min.js"></script>
+    <script type="text/javascript" src="../bower_components/jqueryui/jquery-ui.js"></script>
 
     <!-- include source files here... -->
     <script type="text/javascript" src="../src/knockout-toolbelt.js"></script>
@@ -20,18 +21,7 @@
     <!-- include spec files here... -->
     <script type="text/javascript" src="jasmine-helpers.js"></script>
     <script type="text/javascript" src="extenders.spec.js"></script>
-
-    <script type="text/javascript">
-      (function() {
-        var jasmineEnv = jasmine.getEnv(),
-            jasmineReporter = new jasmine.TrivialReporter();
-
-        jasmineEnv.updateInterval = 1000;
-        jasmineEnv.addReporter(jasmineReporter);
-
-        window.onload = function () { jasmineEnv.execute(); }
-      })();
-    </script>
+    <script type="text/javascript" src="bindingHandlers.browserspec.js"></script>
   </head>
 
   <body></body>
