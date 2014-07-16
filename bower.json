@@ -25,6 +25,8 @@
     "underscore.string": "~2.3.3"
   },
   "devDependencies": {
-    "jqueryui": "~1.11.0"
+    "jqueryui": "~1.11.0",
+    "jquery-file-upload": "~9.6.0",
+    "jasmine": "~2.0.0"
   }
 }

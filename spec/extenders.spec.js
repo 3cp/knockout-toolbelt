@@ -1,16 +1,21 @@
-(function() {
-  var ko = this.ko || require('../src/knockout-toolbelt.js');
+/* global define */
+/* global describe */
+/* global it */
+/* global expect */
+
+define(['knockout', '/base/src/knockout-toolbelt.js'], function(ko) {
+  'use strict';
 
   describe("Extender 'numeric'", function () {
 
     it("limit number to integer.", function() {
-      var num = ko.observable().extend({numeric: 0})
+      var num = ko.observable().extend({numeric: 0});
 
       expect(ko.isObservable(num)).toBe(true);
       expect(num()).toBe(0);
       num(-2.93);
       expect(num()).toBe(-3);
-      num("abc")
+      num("abc");
       expect(num()).toBe(0);
       num("23.00001");
       expect(num()).toBe(23);
@@ -19,13 +24,13 @@
     });
 
     it("limit number to certain precision.", function() {
-      var num = ko.observable().extend({numeric: 2})
+      var num = ko.observable().extend({numeric: 2});
 
       expect(ko.isObservable(num)).toBe(true);
       expect(num()).toBe(0);
       num(-2.9353);
       expect(num()).toBe(-2.94);
-      num("abc")
+      num("abc");
       expect(num()).toBe(0);
       num("23.011");
       expect(num()).toBe(23.01);
@@ -162,4 +167,4 @@
   });
 
 
-})(this);
+});

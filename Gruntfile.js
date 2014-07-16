@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: pkg,
     jshint: {
-      all: ['src/knockout-toolbelt.js'],
+      all: ['src/knockout-toolbelt.js', 'spec/*spec.js'],
       options: {
         globals: {
           module: true,
@@ -50,16 +50,6 @@ module.exports = function(grunt) {
         dest: 'dist/<%= pkg.name %>.min.js'
       }
     },
-    jasmine_node: {
-      options: {
-        specNameMatcher: "\\.spec",
-        projectRoot: ".",
-        requirejs: false,
-        useHelpers: true,
-        forceExit: true
-      },
-      all: ['spec/']
-    },
     watch: {
       scripts: {
         files: ['src/*.js', 'spec/*.js'],
@@ -74,17 +64,26 @@ module.exports = function(grunt) {
           output: 'docs/'
         }
       }
+    },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        runnerPort: 9999,
+        singleRun: true,
+        browsers: ['PhantomJS'],
+        logLevel: 'ERROR'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-jasmine-node');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('test', ['jshint', 'jasmine_node']);
+  grunt.registerTask('test', ['jshint', 'karma']);
   grunt.registerTask('build', ['concat', 'uglify', 'docco']);
   grunt.registerTask('default', ['test', 'build']);
 };
