@@ -22,7 +22,7 @@
               }
             }
           }
-        });
+        }).extend({ notify: 'always' });
 
         result(target());
         return result;
