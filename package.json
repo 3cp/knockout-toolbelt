@@ -23,7 +23,7 @@
   "dependencies": {
     "jasmine-reporters": "~2.0.0",
     "jquery": "~1.11.1",
-    "knockout": "~3.1.0",
+    "knockout": "~3.2.0",
     "underscore": "~1.6.0",
     "underscore.string": "~2.3.3"
   },
