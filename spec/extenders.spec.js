@@ -166,5 +166,32 @@ define(['knockout', '/base/src/knockout-toolbelt.js'], function(ko) {
     });
   });
 
+  describe("Extender 'enforceFormat'", function() {
+
+    it("enforceFormat string", function() {
+      var phone = ko.observable().extend({enforceFormat: '(99) 9999 9999'});
+
+      expect(ko.isObservable(phone)).toBe(true);
+      expect(phone()).toBe("(__) ____ ____");
+      phone("  023");
+      expect(phone()).toBe("(02) 3___ ____");
+
+      // test backspace
+      phone("(02) 3___ ___"); // one less '_'
+      expect(phone()).toBe("(02) ____ ____");
+
+      phone("02-6293  8304");
+      expect(phone()).toBe("(02) 6293 8304");
+
+      var formatted = ko.observable().extend({enforceFormat: 'Aaa-**9'});
+      expect(ko.isObservable(formatted)).toBe(true);
+      expect(formatted()).toBe("___-___");
+
+      formatted('78 jo');
+      expect(formatted()).toBe("___-___");
+      formatted('apPLe-2');
+      expect(formatted()).toBe("App-Le2");
+    });
+  });
 
 });

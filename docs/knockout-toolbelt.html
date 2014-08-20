@@ -56,7 +56,7 @@
           read: target,
           write: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue)</span> </span>{
             <span class="hljs-keyword">var</span> current = target();
-            <span class="hljs-keyword">var</span> valueToWrite = valueFilter(newValue, opts);
+            <span class="hljs-keyword">var</span> valueToWrite = valueFilter(newValue, opts, current);
 
             <span class="hljs-keyword">if</span> (valueToWrite !== current) {
               target(valueToWrite);
@@ -292,7 +292,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <h1 id="bindinghandlers">bindingHandlers</h1>
+              <h2 id="enforceformat">enforceFormat</h2>
 
             </div>
             
@@ -305,8 +305,32 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              
+              <p>enforce format</p>
+<ul>
+<li><code>a</code> - Represents an alpha character (a-z)</li>
+<li><code>A</code> - Represents an alpha character (A-Z)</li>
+<li><code>9</code> - Represents a numeric character (0-9)</li>
+<li><code>*</code> - Represents an alphanumeric character (A-Z,a-z,0-9)</li>
+<li>example: <code>ko.observable().extend({enforceFormat: &#39;(99) 9999 9999&#39;})</code></li>
+</ul>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    ko.extenders.enforceFormat = buildExtender(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(newValue, format, oldValue)</span> </span>{
+      <span class="hljs-keyword">if</span> (!newValue) {
+        newValue = <span class="hljs-string">''</span>;
+      } <span class="hljs-keyword">else</span> {
+        newValue = newValue.toString();
+      }
+
+      <span class="hljs-keyword">if</span> (!oldValue) {
+        oldValue = <span class="hljs-string">''</span>;
+      } <span class="hljs-keyword">else</span> {
+        oldValue = oldValue.toString();
+      }
+
+      <span class="hljs-keyword">var</span> result = <span class="hljs-string">""</span>;
+      <span class="hljs-keyword">var</span> pure = newValue.replace(<span class="hljs-regexp">/[^a-zA-Z0-9]/g</span>, <span class="hljs-string">''</span>);</pre></div></div>
             
         </li>
         
@@ -317,9 +341,27 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <h2 id="jqueryui-datepicker">jqueryui datepicker</h2>
+              <p>handle backspace on last placeholder</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">if</span> (oldValue.length === format.length &amp;&amp;
+          oldValue.length === newValue.length + <span class="hljs-number">1</span> &amp;&amp;
+          oldValue[oldValue.length - <span class="hljs-number">1</span>].match(<span class="hljs-regexp">/[^a-zA-Z0-9]/</span>) &amp;&amp;
+          oldValue.substr(<span class="hljs-number">0</span>, newValue.length) === newValue &amp;&amp;
+          pure.length &gt; <span class="hljs-number">0</span>) {
+        pure = pure.substr(<span class="hljs-number">0</span>, pure.length - <span class="hljs-number">1</span>);
+      }
+
+      <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>;
+
+      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> j = <span class="hljs-number">0</span>; j &lt; format.length; j++) {
+        <span class="hljs-keyword">switch</span>(format[j]) {
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'a'</span>:
+            <span class="hljs-keyword">if</span> (i &lt; pure.length &amp;&amp; pure[i].match(<span class="hljs-regexp">/[a-zA-Z]/</span>)) {
+              result += pure[i].toLowerCase();
+              i++;
+            } <span class="hljs-keyword">else</span> {</pre></div></div>
             
         </li>
         
@@ -330,11 +372,51 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Only when jqueryui datepicker is available <a href="http://api.jqueryui.com/datepicker/">http://api.jqueryui.com/datepicker/</a></p>
+              <p>use ‘_’ as placeHolder</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($.fn &amp;&amp; $.fn.datepicker) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>              result += <span class="hljs-string">'_'</span>;
+              i = pure.length;
+            }
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'A'</span>:
+            <span class="hljs-keyword">if</span> (i &lt; pure.length &amp;&amp; pure[i].match(<span class="hljs-regexp">/[a-zA-Z]/</span>)) {
+              result += pure[i].toUpperCase();
+              i++;
+            } <span class="hljs-keyword">else</span> {
+              result += <span class="hljs-string">'_'</span>;
+              i = pure.length;
+            }
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'9'</span>:
+            <span class="hljs-keyword">if</span> (i &lt; pure.length &amp;&amp; pure[i].match(<span class="hljs-regexp">/[0-9]/</span>)) {
+              result += pure[i];
+              i++;
+            } <span class="hljs-keyword">else</span> {
+              result += <span class="hljs-string">'_'</span>;
+              i = pure.length;
+            }
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">case</span> <span class="hljs-string">'*'</span>:
+            <span class="hljs-keyword">if</span> (i &lt; pure.length &amp;&amp; pure[i].match(<span class="hljs-regexp">/[a-zA-Z0-9]/</span>)) {
+              result += pure[i];
+              i++;
+            } <span class="hljs-keyword">else</span> {
+              result += <span class="hljs-string">'_'</span>;
+              i = pure.length;
+            }
+            <span class="hljs-keyword">break</span>;
+          <span class="hljs-keyword">default</span>:
+            <span class="hljs-keyword">if</span> (i &lt; pure.length &amp;&amp; pure[i] === format[j]) {
+              i++;
+            }
+            result += format[j];
+        }
+      }
+
+      <span class="hljs-keyword">return</span> result;
+    });</pre></div></div>
             
         </li>
         
@@ -344,6 +426,59 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h1 id="bindinghandlers">bindingHandlers</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="jqueryui-datepicker">jqueryui datepicker</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Only when jqueryui datepicker is available <a href="http://api.jqueryui.com/datepicker/">http://api.jqueryui.com/datepicker/</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> ($.fn &amp;&amp; $.fn.datepicker) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <ul>
 <li><code>&lt;input date-bind=&quot;datepicker: aDate, datepickerOptions: { dateFormat: &#39;yy-mm-dd&#39; }&quot;&gt;</code></li>
@@ -357,11 +492,11 @@
         </li>
         
         
-        <li id="section-20">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>pass any valid datepicker options to <code>datepickerOptions</code>.</p>
 
@@ -393,11 +528,11 @@
         </li>
         
         
-        <li id="section-21">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h2 id="jquery-fileupload">jquery fileupload</h2>
 
@@ -406,11 +541,11 @@
         </li>
         
         
-        <li id="section-22">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Only when jquery fileupload is available <a href="https://github.com/blueimp/jQuery-File-Upload">https://github.com/blueimp/jQuery-File-Upload</a></p>
 
@@ -435,11 +570,11 @@
         </li>
         
         
-        <li id="section-23">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>support various module systems</p>
 
@@ -451,11 +586,11 @@
         </li>
         
         
-        <li id="section-24">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>Node.js</p>
 
@@ -472,11 +607,11 @@
         </li>
         
         
-        <li id="section-25">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>AMD (requireJS)</p>
 
@@ -488,11 +623,11 @@
         </li>
         
         
-        <li id="section-26">
+        <li id="section-30">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
               <p>Non-module case - attach to the global instance</p>
 

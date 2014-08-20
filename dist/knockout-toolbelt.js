@@ -12,7 +12,7 @@
           read: target,
           write: function(newValue) {
             var current = target();
-            var valueToWrite = valueFilter(newValue, opts);
+            var valueToWrite = valueFilter(newValue, opts, current);
 
             if (valueToWrite !== current) {
               target(valueToWrite);
@@ -90,6 +90,91 @@
     //  - `ko.observable().extend({lowercase: true})`
     ko.extenders.lowercase = buildExtender(function(newValue) {
       return newValue.toString().toLowerCase();
+    });
+
+    // enforceFormat
+    // ------
+    // enforce format
+    //  - `a` - Represents an alpha character (a-z)
+    //  - `A` - Represents an alpha character (A-Z)
+    //  - `9` - Represents a numeric character (0-9)
+    //  - `*` - Represents an alphanumeric character (A-Z,a-z,0-9)
+    //  - example: `ko.observable().extend({enforceFormat: '(99) 9999 9999'})`
+    ko.extenders.enforceFormat = buildExtender(function(newValue, format, oldValue) {
+      if (!newValue) {
+        newValue = '';
+      } else {
+        newValue = newValue.toString();
+      }
+
+      if (!oldValue) {
+        oldValue = '';
+      } else {
+        oldValue = oldValue.toString();
+      }
+
+      var result = "";
+      var pure = newValue.replace(/[^a-zA-Z0-9]/g, '');
+
+      // handle backspace on last placeholder
+      if (oldValue.length === format.length &&
+          oldValue.length === newValue.length + 1 &&
+          oldValue[oldValue.length - 1].match(/[^a-zA-Z0-9]/) &&
+          oldValue.substr(0, newValue.length) === newValue &&
+          pure.length > 0) {
+        pure = pure.substr(0, pure.length - 1);
+      }
+
+      var i = 0;
+
+      for (var j = 0; j < format.length; j++) {
+        switch(format[j]) {
+          case 'a':
+            if (i < pure.length && pure[i].match(/[a-zA-Z]/)) {
+              result += pure[i].toLowerCase();
+              i++;
+            } else {
+              // use '_' as placeHolder
+              result += '_';
+              i = pure.length;
+            }
+            break;
+          case 'A':
+            if (i < pure.length && pure[i].match(/[a-zA-Z]/)) {
+              result += pure[i].toUpperCase();
+              i++;
+            } else {
+              result += '_';
+              i = pure.length;
+            }
+            break;
+          case '9':
+            if (i < pure.length && pure[i].match(/[0-9]/)) {
+              result += pure[i];
+              i++;
+            } else {
+              result += '_';
+              i = pure.length;
+            }
+            break;
+          case '*':
+            if (i < pure.length && pure[i].match(/[a-zA-Z0-9]/)) {
+              result += pure[i];
+              i++;
+            } else {
+              result += '_';
+              i = pure.length;
+            }
+            break;
+          default:
+            if (i < pure.length && pure[i] === format[j]) {
+              i++;
+            }
+            result += format[j];
+        }
+      }
+
+      return result;
     });
 
     // bindingHandlers
