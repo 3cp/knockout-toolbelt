@@ -100,6 +100,9 @@
     //  - `9` - Represents a numeric character (0-9)
     //  - `*` - Represents an alphanumeric character (A-Z,a-z,0-9)
     //  - example: `ko.observable().extend({enforceFormat: '(99) 9999 9999'})`
+    //
+    // You probably want to use this with binding with realtime update,
+    // like `value: val, valueUpdate: 'afterkeydown'` or `textInput: val` in knockout 3.2.
     ko.extenders.enforceFormat = buildExtender(function(newValue, format, oldValue) {
       if (!newValue) {
         newValue = '';
