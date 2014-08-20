@@ -66,7 +66,7 @@
               }
             }
           }
-        });
+        }).extend({ notify: <span class="hljs-string">'always'</span> });
 
         result(target());
         <span class="hljs-keyword">return</span> result;
@@ -352,7 +352,7 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>      ko.bindingHandlers.datepicker = {
-        init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, valueAccessor, allBindingsAccessor)</span> </span>{</pre></div></div>
+        init: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(element, valueAccessor, allBindings)</span> </span>{</pre></div></div>
             
         </li>
         
@@ -367,7 +367,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> options = allBindingsAccessor().datepickerOptions || {};
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> options = allBindings.get(<span class="hljs-string">'datepickerOptions'</span>) || {};
           $(element).datepicker(options);
 
           $(element).on(<span class="hljs-string">"change"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{

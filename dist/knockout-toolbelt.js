@@ -22,7 +22,7 @@
               }
             }
           }
-        });
+        }).extend({ notify: 'always' });
 
         result(target());
         return result;
@@ -101,9 +101,9 @@
     if ($.fn && $.fn.datepicker) {
       // - `<input date-bind="datepicker: aDate, datepickerOptions: { dateFormat: 'yy-mm-dd' }">`
       ko.bindingHandlers.datepicker = {
-        init: function (element, valueAccessor, allBindingsAccessor) {
+        init: function (element, valueAccessor, allBindings) {
           // pass any valid datepicker options to `datepickerOptions`.
-          var options = allBindingsAccessor().datepickerOptions || {};
+          var options = allBindings.get('datepickerOptions') || {};
           $(element).datepicker(options);
 
           $(element).on("change", function () {
