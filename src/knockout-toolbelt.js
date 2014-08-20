@@ -217,6 +217,7 @@
     // jquery fileupload
     // -----------------
     // Only when jquery fileupload is available [https://github.com/blueimp/jQuery-File-Upload](https://github.com/blueimp/jQuery-File-Upload)
+    // - `<input type="file" data-bind="fileupload: {url: url, done: doneFn, fail: failFn}">`
     if ($.fn && $.fn.fileupload) {
       ko.bindingHandlers.fileupload = {
         init: function (element, valueAccessor) {

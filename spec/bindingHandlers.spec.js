@@ -52,7 +52,7 @@ define(['knockout', 'jquery', 'jqueryui', 'jquery.fileupload', '/base/src/knocko
       var url = '/testupload';
       var doneFn = jasmine.createSpy("success");
       var failFn = jasmine.createSpy("failure");
-      var node = $('<input type="file" data-bind="fileupload: {url: url, dataType: \'json\', done: done, fail: fail}">').appendTo('#testNode');
+      var node = $('<input type="file" data-bind="fileupload: {url: url, done: done, fail: fail}">').appendTo('#testNode');
       ko.applyBindings({url: url, done: function(e,d) {doneFn(d.result);}, fail: function(e,d) {failFn(d.result);} }, $('#testNode')[0]);
 
       setTimeout(function() {

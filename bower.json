@@ -16,7 +16,10 @@
     "node_modules",
     "bower_components",
     "spec",
-    "*.yml"
+    "*.yml",
+    "Gruntfile.js",
+    "test-main.js",
+    "karma.conf.js"
   ],
   "dependencies": {
     "knockout": "~3.2.0",
