@@ -231,7 +231,7 @@
       };
     }
 
-
+    return ko;
   }
 
   // support various module systems
